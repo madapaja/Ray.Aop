@@ -93,6 +93,22 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
+    public function test_StartWith()
+    {
+        $match = $this->matcher->startWith('get');
+        $class = 'Ray\Aop\Tests\Mock\AnnotateClass';
+        $result = $match($class, Matcher::TARGET_METHOD);
+        $this->assertTrue($result);
+    }
+
+    public function test_StartNotMatch()
+    {
+        $match = $this->matcher->startWith('not_mathch_method_prefix');
+        $class = 'Ray\Aop\Tests\Mock\AnnotateClass';
+        $result = $match($class, Matcher::TARGET_METHOD);
+        $this->assertFalse($result);
+    }
+
     public function test_toString()
     {
         $matcher = clone $this->matcher;
