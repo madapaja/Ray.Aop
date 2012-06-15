@@ -93,26 +93,32 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function test_StartWith()
-    {
-        $match = $this->matcher->startWith('get');
-        $class = 'Ray\Aop\Tests\Mock\AnnotateClass';
-        $result = $match($class, Matcher::TARGET_METHOD);
-        $this->assertTrue($result);
-    }
-
-    public function test_StartNotMatch()
-    {
-        $match = $this->matcher->startWith('not_mathch_method_prefix');
-        $class = 'Ray\Aop\Tests\Mock\AnnotateClass';
-        $result = $match($class, Matcher::TARGET_METHOD);
-        $this->assertFalse($result);
-    }
-
     public function test_toString()
     {
         $matcher = clone $this->matcher;
         $this->assertSame(':null', (string)$matcher);
     }
 
+    /**
+     * start '__' prefix method doesn't match
+     */
+    public function test_AnyButNotStartWithDoubleUnderscore()
+    {
+        $any = $this->matcher->any();
+        $result = $any('__construct', Matcher::TARGET_METHOD);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * ArrayObject interface method doesn't match
+     */
+    public function test_AnyButNotArrayAccessMethod()
+    {
+        $any = $this->matcher->any();
+        $methods = (new \ReflectionClass('ArrayObject'))->getMethods();
+        foreach ($methods as $method) {
+            $result = $any($method->name, Matcher::TARGET_METHOD);
+            $this->assertFalse($result);
+        }
+    }
 }

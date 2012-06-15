@@ -135,7 +135,7 @@ class Matcher implements Matchable
     /**
      * Return match(true)
      *
-     * @param string $class
+     * @param string $name   class or method name
      * @param bool   $target self::TARGET_CLASS | self::TARGET_METHOD
      *
      * @return Ray\Di\Matcher
@@ -143,7 +143,16 @@ class Matcher implements Matchable
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function isAny($class, $target) {
+    private function isAny($name, $target) {
+        if ($target === self::TARGET_CLASS) {
+            return true;
+        }
+        if (substr($name, 0 ,2) === '__') {
+            return false;
+        }
+        if (in_array($name, ['offsetExists', 'offsetGet', 'offsetSet', 'offsetUnset', 'append', 'getArrayCopy', 'count', 'getFlags', 'setFlags', 'asort', 'ksort', 'uasort', 'uksort', 'natsort', 'natcasesort', 'unserialize', 'serialize', 'getIterator', 'exchangeArray', 'setIteratorClass', 'getIterator', 'getIteratorClass'])) {
+            return false;
+        }
         return true;
     }
 
