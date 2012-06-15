@@ -119,6 +119,20 @@ class Matcher implements Matchable
     }
 
     /**
+     * Return prefix match result
+     *
+     * @param string $prefix
+     *
+     * @return bool
+     */
+    public function startWith($prefix)
+    {
+        $this->method = __FUNCTION__;
+        $this->args = $prefix;
+        return clone $this;
+    }
+
+    /**
      * Return match(true)
      *
      * @param string $class
@@ -193,6 +207,25 @@ class Matcher implements Matchable
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Return prefix match
+     *
+     * @param string $class
+     * @param bool   $target self::TARGET_CLASS | self::TARGET_METHOD
+     * @param string $prefix
+     */
+    private function isStartWith($class, $target, $prefix)
+    {
+        $methods = (new ReflectionClass($class))->getMethods();
+        $result = [];
+        foreach ($methods as $method) {
+            if (strpos($method->name, $prefix) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
