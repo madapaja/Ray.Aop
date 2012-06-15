@@ -74,6 +74,14 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
+    public function test_SubclassesOf_withSameClass()
+    {
+        $match = $this->matcher->subclassesOf('Ray\Aop\MatcherTestSuperClass');
+        $class = 'Ray\Aop\MatcherTestSuperClass';
+        $result = $match($class, Matcher::TARGET_CLASS);
+        $this->assertTrue($result);
+    }
+    
     public function test_SubclassesOfFalse()
     {
         $match = $this->matcher->subclassesOf('Ray\Aop\MatcherTestSuperClass');
@@ -81,6 +89,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $result = $match($class, Matcher::TARGET_CLASS);
         $this->assertFalse($result);
     }
+
 
     /**
      * @expectedException Ray\Aop\Exception\InvalidArgument
@@ -120,5 +129,21 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             $result = $any($method->name, Matcher::TARGET_METHOD);
             $this->assertFalse($result);
         }
+    }
+    
+    public function test_isStartWithMethodTrue()
+    {
+        $startWith = $this->matcher->startWith('get');
+        $class = 'Ray\Aop\Tests\Mock\AnnotateClass';
+        $result = $startWith($class, Matcher::TARGET_METHOD, 'getSub');
+        $this->assertTrue($result);
+    }
+    
+    public function test_isStartWithMethodFalse()
+    {
+        $startWith = $this->matcher->startWith('on');
+        $class = 'Ray\Aop\Tests\Mock\AnnotateClass';
+        $result = $startWith($class, Matcher::TARGET_METHOD, '__construct');
+        $this->assertFalse($result);
     }
 }
