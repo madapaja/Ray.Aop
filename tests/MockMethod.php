@@ -36,4 +36,14 @@ class MockMethod
     {
         return $c * 3;
     }
+    
+    public function __toString()
+    {
+        return 'toStringString';
+    }
+    
+    public static function greeting($name)
+    {
+        return 'hello ' . $name;
+    }
 }
